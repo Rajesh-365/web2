@@ -7,7 +7,7 @@ const council = [
     position: 'Founder & Correspondent',
     color: 'from-orange-500 to-red-600',
     image: '/images/Persons/Mohan.png',
-    phone: '+91 9908663276',        // call number
+    phone: '+91 9701936669',        // call number
     whatsapp: '+91 7981724802',     // WhatsApp number
   },
   {
