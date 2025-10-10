@@ -70,14 +70,13 @@ const Sidebar = ({ isOpen, onClose }) => {
           isOpen ? 'translate-x-0' : '-translate-x-full',
           'w-72',
           isExpanded ? 'lg:w-80' : 'lg:w-20',
-          'md:translate-x-0',
-          'max-w-full'
+          'md:translate-x-0'
         ].join(' ')}
         onMouseEnter={() => setIsExpanded(true)}
         onMouseLeave={() => setIsExpanded(false)}
       >
-        <div className="h-full overflow-y-auto pb-20 scrollbar-hide max-w-full">
-          <div className="p-2 space-y-1 max-w-full">
+        <div className="h-full overflow-y-auto pb-20 scrollbar-hide">
+          <div className="p-2 space-y-1">
             {menuItems.map((item) => (
               <button
                 key={item.id}

@@ -12,18 +12,28 @@ const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // Measure fixed header height
   useEffect(() => {
     const computeOffset = () => {
-      const header =
-        (typeof document !== 'undefined' && document.querySelector('#site-header')) ||
-        (typeof document !== 'undefined' && document.querySelector('header'));
-      const h = header ? header.getBoundingClientRect().height : 0;
-      setHeaderOffset(Math.max(0, Math.round(h)));
+      const header = document.querySelector('header');
+      if (header) {
+        const rect = header.getBoundingClientRect();
+        const height = Math.round(rect.height);
+        // Add a small buffer for better visual spacing
+        const buffer = window.innerWidth <= 640 ? 5 : 10;
+        setHeaderOffset(Math.max(0, height + buffer));
+      } else {
+        // Fallback for when header isn't found
+        setHeaderOffset(window.innerWidth <= 640 ? 120 : 160);
+      }
     };
+    
+    // Initial calculation
     computeOffset();
+    
+    // Recalculate on resize and orientation change
     window.addEventListener('resize', computeOffset);
     window.addEventListener('orientationchange', computeOffset);
+    
     return () => {
       window.removeEventListener('resize', computeOffset);
       window.removeEventListener('orientationchange', computeOffset);
@@ -38,15 +48,13 @@ const Hero = () => {
   return (
     <section
       id="hero"
-      className="relative overflow-x-hidden overflow-y-visible"  // <-- hard stop for horizontal overflow
+      className="relative overflow-x-hidden overflow-y-visible"
       style={{ '--headerOffset': `${headerOffset}px` }}
     >
       {/* Background (fully clipped) */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 dark:from-gray-900 dark:via-blue-800 dark:to-indigo-800" />
         <div className="absolute inset-0 bg-black/40" />
-
-        {/* Subtle geometry (all inside a clipped wrapper) */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {/* small circles */}
           <div className="absolute w-12 sm:w-16 h-12 sm:h-16 border-2 border-white/10 rounded-full animate-floating-slow" style={{ top: '2rem', left: '2rem' }} />
@@ -54,7 +62,7 @@ const Hero = () => {
           <div className="absolute top-1/3 left-1/4 w-20 sm:w-28 h-20 border border-white/10 rounded-full animate-pulse" style={{ animationDelay: '1.5s' }} />
           <div className="absolute top-2/3 right-1/3 w-16 sm:w-20 h-16 border border-white/10 rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
 
-          {/* diagonal light beams (clipped inside their own overflow-hidden wrappers) */}
+          {/* diagonal light beams */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 overflow-hidden">
               <div className="absolute left-1/2 top-[-20%] h-[180%] w-[140%] -translate-x-1/2 rotate-45 bg-gradient-to-b from-blue-500/10 via-transparent to-transparent" />
@@ -72,18 +80,18 @@ const Hero = () => {
       <div className="container mx-auto px-4 sm:px-6 relative z-10 hero-inner">
         <div className="max-w-2xl sm:max-w-3xl mx-auto text-center w-full">
           <div
-            className={`space-y-4 sm:space-y-5 transition-all duration-1000 ${
-              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
-            }`}
+            className={`space-y-4 sm:space-y-5 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
           >
             {/* Welcome pill */}
-            <div className="inline-block mt-0 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-xs sm:text-sm text-white/90 font-medium fade-in-up max-w-[90vw] sm:max-w-none">
-              Welcome to Emmaus Institute of Theology
-            </div>
+            <div className="inline-flex items-center mt-6 mb-6 sm:mt-0 sm:mb-0 px-3 sm:px-4 py-1 sm:py-1.5 rounded-md bg-white/10 backdrop-blur-sm border border-white/20 text-xs sm:text-sm text-white/90 font-medium fade-in-up max-w-[90vw] sm:max-w-none whitespace-nowrap gap-2">
+  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0"></div>
+  <span>Welcome to Emmaus Institute of Theology</span>
+</div>
+
 
             {/* Title */}
             <h1
-              className="fade-in-up py-0 px-0 text-center text-white font-extrabold
+              className="fade-in-up py-2 px-0 text-center text-white font-extrabold
                          text-3xl sm:text-5xl md:text-6xl leading-tight tracking-tight
                          mx-auto max-w-5xl w-full"
             >
@@ -97,7 +105,6 @@ const Hero = () => {
                     </span>
                   </span>
                 </span>
-
                 {/* Desktop: single line */}
                 <span className="hidden sm:inline whitespace-nowrap">
                   The Gospel that brings{' '}
@@ -106,7 +113,6 @@ const Hero = () => {
                   </span>
                 </span>
               </span>
-
               {/* Second line */}
               <span className="block">
                 It brings a{' '}
@@ -117,12 +123,12 @@ const Hero = () => {
             </h1>
 
             {/* Subtitle */}
-            <p className="block text-gray-300 max-w-2xl mx-auto leading-relaxed font-light px-4 sm:px-0 fade-in-up py-0 text-sm sm:text-base md:text-lg">
+            <p className="block text-gray-300 max-w-2xl mx-auto leading-relaxed font-light px-4 sm:px-0 fade-in-up py-2 text-sm sm:text-base md:text-lg">
               {t('heroSubtitle')}
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 pt-3 sm:pt-4 px-4 sm:px-0">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 pt-3 sm:pt-4 px-4 sm:px-0 pb-0 mb-0">
               <button
                 onClick={() => document.getElementById('admission').scrollIntoView({ behavior: 'smooth' })}
                 className="w-full sm:w-auto btn-rect btn-sm btn-primary group"
@@ -130,7 +136,6 @@ const Hero = () => {
                 {t('applyNow')}
                 <ArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 inline-block align-middle" />
               </button>
-
               <button
                 onClick={() => document.getElementById('courses').scrollIntoView({ behavior: 'smooth' })}
                 className="w-full sm:w-auto btn-rect btn-sm btn-explore shine-loop"
@@ -138,12 +143,9 @@ const Hero = () => {
                 {t('Explore Courses')}
               </button>
             </div>
-
             {/* Arrow */}
             <div
-              className={`flex justify-center pt-1 transition-all duration-1000 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
-              }`}
+              className={`flex justify-center pt-0 pb-0 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             >
               <button
                 onClick={scrollToNext}
@@ -157,7 +159,7 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* local CSS (kept same behavior, overflow-safe) */}
+      {/* local CSS */}
       <style>{`
         @keyframes gradient {
           0% { background-position: 0% 50%; }
@@ -181,16 +183,91 @@ const Hero = () => {
         .fade-in-up { animation: fadeInUp 1s ease-out both; }
         .animate-floating-slow { animation: floating-slow 6s ease-in-out infinite; position: absolute; }
 
-        /* EXACT SPACING */
+        /* OPTIMIZED SPACING under header (desktop & mobile) */
         #hero .hero-inner {
-          padding-top: max(0px, calc(var(--headerOffset, 0px) - 2cm));
-          padding-bottom: 1cm;
+          padding-top: calc(var(--headerOffset, 0px) + 40px);
+          padding-bottom: 0;
+          min-height: 85vh;
+          display: flex;
+          align-items: center;
         }
         @media (max-width: 640px) {
           #hero .hero-inner {
-            padding-top: max(0px, calc(var(--headerOffset, 0px) - 2.8cm));
-            padding-bottom: 0.8cm;
+            padding-top: 15px;  /* Increased top padding on mobile */
+            margin-top: 0;
+            padding-bottom: 5px;  /* 5px bottom padding on mobile */
+            min-height: auto;  /* Remove fixed height on mobile */
+            align-items: flex-start;  /* Align content to top */
           }
+          #hero .hero-inner > div {
+            margin-top: 0;  /* No additional margin */
+            padding-top: 0;  /* No extra padding on content */
+            padding-bottom: 0;
+            margin-bottom: 0;
+          }
+        }
+        @media (max-width: 480px) {
+          #hero .hero-inner {
+            padding-top: 12px;  /* Increased top padding on small phones */
+            padding-bottom: 5px;  /* 5px bottom padding on small phones */
+            min-height: auto;  /* Remove fixed height on small phones */
+            align-items: flex-start;
+          }
+          #hero .hero-inner > div {
+            margin-top: 0;  /* No additional margin */
+            padding-top: 0;  /* No extra padding on content */
+            padding-bottom: 0;
+            margin-bottom: 0;
+          }
+        }
+        
+        /* Mobile spacing adjustments */
+        @media (max-width: 640px) {
+          #hero .hero-inner > div > div:last-child {
+            padding-bottom: 0;
+            margin-bottom: 0;
+          }
+          #hero .hero-inner > div {
+            padding-bottom: 0;
+            margin-bottom: 0;
+          }
+          /* Add spacing between headings on mobile */
+          #hero .inline-block {
+            margin-bottom: 8px;
+          }
+          /* Remove top margin on desktop for welcome pill */
+          @media (min-width: 640px) {
+            #hero .inline-flex {
+              margin-top: 0 !important;
+            }
+            /* Remove any spacing from parent container on desktop */
+            #hero .hero-inner > div > div:first-child {
+              margin-top: 0 !important;
+              padding-top: 0 !important;
+            }
+          }
+          #hero h1 {
+            margin-top: 8px;
+            margin-bottom: 12px;
+          }
+          #hero p {
+            margin-top: 8px;
+            margin-bottom: 12px;
+          }
+          #hero .flex {
+            margin-top: 8px;
+            margin-bottom: 8px;
+          }
+        }
+        
+        /* Remove all bottom spacing from hero section */
+        #hero {
+          padding-bottom: 0;
+          margin-bottom: 0;
+        }
+        #hero .hero-inner > div {
+          padding-bottom: 0;
+          margin-bottom: 0;
         }
 
         /* Buttons */
@@ -198,7 +275,7 @@ const Hero = () => {
           position: relative; display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
           padding:.85rem 1.25rem; border-radius:.6rem; font-weight:600; font-size:1rem; color:#fff;
           transition: transform .18s ease, box-shadow .22s ease, filter .22s ease;
-          overflow:hidden; /* clip shine pseudo */
+          overflow:hidden;
         }
         .btn-rect:hover{ transform: translateY(-1px); }
         .btn-rect:active{ transform: translateY(0); }
@@ -210,7 +287,6 @@ const Hero = () => {
           border: 1px solid rgba(255,255,255,.12);
         }
 
-        /* Explore button with SILVER shine (fast loop, already overflow-clipped) */
         .btn-explore{
           background:
             linear-gradient(rgba(13,20,38,.72), rgba(13,20,38,.72)) padding-box,

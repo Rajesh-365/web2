@@ -71,8 +71,8 @@ const App = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       {/* Add top padding to prevent overlap with fixed header */}
-      <div className="lg:pl-20 pt-[140px] w-full overflow-x-hidden">
-        <main className="w-full max-w-full">
+      <div className="lg:pl-20 pt-[1px]">
+        <main>
           <Hero />
 
           <ErrorBoundary>

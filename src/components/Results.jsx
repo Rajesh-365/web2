@@ -12,8 +12,8 @@ const APPEARED_TOTAL = 37;
 /* ---- Dummy Results Data (replace with your real data if needed) ---- */
 const DUMMY_RESULTS = [
   { studentId: "EC001", name: "Ruthu Nagavarapu", percentage: 94, status: "Distinction", rank: 1, course: "C.Th", year: "2024", location: "Guntur", firstSem25: 24, secondSem25: 23 },
-  { studentId: "EC002", name: "Tirupathi Raidu", percentage: 94, status: "Distinction", rank: 2, course: "C.Th", year: "2024", location: "Vijayawada", firstSem25: 23, secondSem25: 24 },
-  { studentId: "EC003", name: "Grace David", percentage: 92, status: "Distinction", rank: 3, course: "C.Th", year: "2024", location: "Ongole", firstSem25: 23, secondSem25: 23 },
+  { studentId: "EC002", name: "Tirupathi Raidu", percentage: 94, status: "Distinction", rank: 1, course: "C.Th", year: "2024", location: "Vijayawada", firstSem25: 23, secondSem25: 24 },
+  { studentId: "EC003", name: "Grace David", percentage: 92, status: "Distinction", rank: 2, course: "C.Th", year: "2024", location: "Ongole", firstSem25: 23, secondSem25: 23 },
   { studentId: "EC004", name: "Paul Matthew", percentage: 86, status: "Pass", rank: 4, course: "C.Th", year: "2024", location: "Tenali", firstSem25: 22, secondSem25: 21 },
   { studentId: "EC005", name: "Elias Joseph", percentage: 82, status: "Pass", rank: 5, course: "C.Th", year: "2024", location: "Nellore", firstSem25: 21, secondSem25: 20 },
   { studentId: "EC006", name: "Charan Prasad", percentage: 79, status: "Pass", rank: 6, course: "C.Th", year: "2024", location: "Eluru", firstSem25: 19, secondSem25: 20 },
