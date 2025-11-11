@@ -76,79 +76,157 @@ const Courses = () => {
             </p>
           </div>
 
-          {/* Courses Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {courses.map((course, index) => (
-              <div
-                key={course.id}
-                className="group animate-fade-in-up"
-                style={{ animationDelay: `${index * 150}ms`, perspective: '1200px' }} // 3D perspective
-              >
+          {/* Courses - horizontal scroll on mobile, grid on desktop */}
+          <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+            {/* Mobile: horizontal scroll */}
+            <div className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-gray-200 dark:scrollbar-track-gray-800 lg:hidden">
+              {courses.map((course, index) => (
                 <div
-                  className="
-                    bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl
-                    transition-all duration-500 overflow-hidden h-full flex flex-col
-                    border border-gray-100 dark:border-white/10
-                    transform-gpu
-                    group-hover:-translate-y-2 group-hover:rotate-[0.75deg]    /* tilt */
-                    dark:hover:border-blue-500/50
-                    dark:hover:shadow-[0_0_18px_rgba(59,130,246,0.25)]
-                  "
+                  key={course.id}
+                  className="group animate-fade-in-up w-[85vw] sm:w-[75vw] md:w-[45vw] snap-center flex-shrink-0"
+                  style={{ animationDelay: `${index * 150}ms`, perspective: '1200px' }}
                 >
-                  {/* Header */}
-                  <div className={`bg-gradient-to-br ${course.color} p-6 text-white relative overflow-hidden`}>
-                    <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full transform translate-x-6 -translate-y-6" />
-                    <div className="relative z-10">
-                      <div className="flex items-center justify-between mb-4">
-                        <GraduationCap className="w-8 h-8 text-white/95" />
-                        <Award className="w-6 h-6 text-white/70" />
+                  <div
+                    className="
+                      bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl
+                      transition-all duration-500 overflow-hidden h-full flex flex-col
+                      border border-gray-100 dark:border-white/10
+                      transform-gpu
+                      group-hover:-translate-y-2 group-hover:rotate-[0.75deg]
+                      dark:hover:border-blue-500/50
+                      dark:hover:shadow-[0_0_18px_rgba(59,130,246,0.25)]
+                    "
+                  >
+                    {/* Header */}
+                    <div className={`bg-gradient-to-br ${course.color} p-6 text-white relative overflow-hidden`}>
+                      <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full transform translate-x-6 -translate-y-6" />
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                          <GraduationCap className="w-8 h-8 text-white/95" />
+                          <Award className="w-6 h-6 text-white/70" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-1">{course.title}</h3>
+                        <p className="text-white/90 text-sm">{course.fullName}</p>
                       </div>
-                      <h3 className="text-2xl font-bold mb-1">{course.title}</h3>
-                      <p className="text-white/90 text-sm">{course.fullName}</p>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-6 flex-1 flex flex-col">
-                    <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-4">
-                      <Clock className="w-4 h-4 text-blue-500" />
-                      <span className="text-sm">{course.duration}</span>
                     </div>
 
-                    <p className="text-gray-800 dark:text-gray-200 mb-4 flex-1">
-                      {course.description}
-                    </p>
+                    {/* Content */}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-4">
+                        <Clock className="w-4 h-4 text-blue-500" />
+                        <span className="text-sm">{course.duration}</span>
+                      </div>
 
-                    {/* Highlights */}
-                    <div className="mb-6">
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
-                        <BookOpen className="w-4 h-4 text-purple-500" />
-                        Key Areas:
-                      </h4>
-                      <ul className="space-y-1">
-                        {course.highlights.map((highlight, idx) => (
-                          <li
-                            key={idx}
-                            className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2"
-                          >
-                            <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-                            {highlight}
-                          </li>
-                        ))}
-                      </ul>
+                      <p className="text-gray-800 dark:text-gray-200 mb-4 flex-1">
+                        {course.description}
+                      </p>
+
+                      {/* Highlights */}
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-purple-500" />
+                          Key Areas:
+                        </h4>
+                        <ul className="space-y-1">
+                          {course.highlights.map((highlight, idx) => (
+                            <li
+                              key={idx}
+                              className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2"
+                            >
+                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                              {highlight}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Apply Button */}
+                      <button
+                        onClick={() => handleApply(course.id)}
+                        className={`w-full bg-gradient-to-r ${course.color} hover:shadow-lg text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+                      >
+                        {t('applyNow')}
+                      </button>
                     </div>
-
-                    {/* Apply Button */}
-                    <button
-                      onClick={() => handleApply(course.id)}
-                      className={`w-full bg-gradient-to-r ${course.color} hover:shadow-lg text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
-                    >
-                      {t('applyNow')}
-                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+
+            {/* Desktop: normal grid */}
+            <div className="hidden lg:contents">
+              {courses.map((course, index) => (
+                <div
+                  key={course.id}
+                  className="group animate-fade-in-up"
+                  style={{ animationDelay: `${index * 150}ms`, perspective: '1200px' }}
+                >
+                  <div
+                    className="
+                      bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl
+                      transition-all duration-500 overflow-hidden h-full flex flex-col
+                      border border-gray-100 dark:border-white/10
+                      transform-gpu
+                      group-hover:-translate-y-2 group-hover:rotate-[0.75deg]
+                      dark:hover:border-blue-500/50
+                      dark:hover:shadow-[0_0_18px_rgba(59,130,246,0.25)]
+                    "
+                  >
+                    {/* Header */}
+                    <div className={`bg-gradient-to-br ${course.color} p-6 text-white relative overflow-hidden`}>
+                      <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full transform translate-x-6 -translate-y-6" />
+                      <div className="relative z-10">
+                        <div className="flex items-center justify-between mb-4">
+                          <GraduationCap className="w-8 h-8 text-white/95" />
+                          <Award className="w-6 h-6 text-white/70" />
+                        </div>
+                        <h3 className="text-2xl font-bold mb-1">{course.title}</h3>
+                        <p className="text-white/90 text-sm">{course.fullName}</p>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-6 flex-1 flex flex-col">
+                      <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300 mb-4">
+                        <Clock className="w-4 h-4 text-blue-500" />
+                        <span className="text-sm">{course.duration}</span>
+                      </div>
+
+                      <p className="text-gray-800 dark:text-gray-200 mb-4 flex-1">
+                        {course.description}
+                      </p>
+
+                      {/* Highlights */}
+                      <div className="mb-6">
+                        <h4 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
+                          <BookOpen className="w-4 h-4 text-purple-500" />
+                          Key Areas:
+                        </h4>
+                        <ul className="space-y-1">
+                          {course.highlights.map((highlight, idx) => (
+                            <li
+                              key={idx}
+                              className="text-sm text-gray-700 dark:text-gray-300 flex items-center gap-2"
+                            >
+                              <div className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
+                              {highlight}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Apply Button */}
+                      <button
+                        onClick={() => handleApply(course.id)}
+                        className={`w-full bg-gradient-to-r ${course.color} hover:shadow-lg text-white py-3 px-4 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500 focus-visible:ring-offset-white dark:focus-visible:ring-offset-gray-900`}
+                      >
+                        {t('applyNow')}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Additional Info */}

@@ -58,7 +58,7 @@ const Header = () => {
       <nav className="w-full bg-white dark:bg-gray-900 border-t border-b border-gray-200 dark:border-gray-700 shadow-sm max-w-full overflow-x-hidden">
         <div className="w-full max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between py-3 px-4 relative max-w-full">
           {/* Mobile header row */}
-          <div className="flex md:hidden w-full justify-between items-center">
+          <div className="flex md:hidden w-full justify-between items-center gap-2">
             <button
               onClick={() => setNavOpen(!navOpen)}
               className="p-2 rounded-md text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
@@ -66,6 +66,12 @@ const Header = () => {
             >
               <Menu className="w-6 h-6" />
             </button>
+            
+            {/* LoginButtons visible on mobile */}
+            <div className="flex items-center gap-2">
+              <LoginButtons />
+            </div>
+            
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleTheme}
@@ -141,21 +147,22 @@ const Header = () => {
 
           {/* Mobile dropdown — neutral outlined rectangular buttons */}
           {navOpen && (
-            <div className="absolute left-0 top-full w-full bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 shadow-lg z-50 flex flex-col items-center gap-4 py-4 md:hidden">
+            <div className="absolute left-0 top-full w-full bg-white dark:bg-gray-900 border-t-2 border-gray-300 dark:border-gray-600 shadow-xl z-[9999] flex flex-col items-center gap-4 py-6 md:hidden">
               <ul className="flex flex-col gap-3 w-full items-center px-4">
                 {navItems.map((item) => (
                   <li key={item.label} className="w-full">
                     {item.label === 'Contact' ? (
                       <button
                         onClick={scrollToFooter}
-                        className="w-full py-3 text-base font-medium rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-600 transition-colors"
+                        className="w-full py-2.5 text-base font-semibold rounded-lg border-2 border-gray-400 dark:border-gray-500 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-blue-50 dark:hover:bg-blue-900 hover:border-blue-500 dark:hover:border-blue-400 active:bg-blue-100 dark:active:bg-blue-800 transition-all shadow-sm"
                       >
                         {item.label}
                       </button>
                     ) : (
                       <a
                         href={item.href}
-                        className="block w-full py-3 text-base font-medium text-center rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-600 transition-colors"
+                        onClick={() => setNavOpen(false)}
+                        className="block w-full py-2.5 text-base font-semibold text-center rounded-lg border-2 border-gray-400 dark:border-gray-500 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:bg-blue-50 dark:hover:bg-blue-900 hover:border-blue-500 dark:hover:border-blue-400 active:bg-blue-100 dark:active:bg-blue-800 transition-all shadow-sm"
                       >
                         {item.label}
                       </a>
@@ -163,10 +170,6 @@ const Header = () => {
                   </li>
                 ))}
               </ul>
-              <div className="w-full flex flex-col gap-3 items-center mt-4 px-4">
-                {/* Update LoginButtons to match style if needed inside that component */}
-                <LoginButtons />
-              </div>
             </div>
           )}
         </div>

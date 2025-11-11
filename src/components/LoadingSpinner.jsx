@@ -3,9 +3,13 @@ import React from 'react';
 const LoadingSpinner = () => {
   return (
     <div className="flex justify-center items-center min-h-[200px]">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      <img 
+        src="../images/logo2.png" 
+        alt="Loading..." 
+        className="h-16 w-16 object-contain animate-pulse"
+      />
     </div>
   );
 };
 
-export default LoadingSpinner; 
+export default LoadingSpinner;

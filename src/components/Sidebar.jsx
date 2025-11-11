@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Church,
   BookOpen,
@@ -20,6 +21,8 @@ import {
 const Sidebar = ({ isOpen, onClose }) => {
   const [activeSection, setActiveSection] = useState('');
   const [isExpanded, setIsExpanded] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
     { id: 'jgf', title: 'JGF', icon: Church, color: 'text-blue-600', bgColor: 'bg-blue-50', href: '#about' },
@@ -29,8 +32,8 @@ const Sidebar = ({ isOpen, onClose }) => {
     { id: 'courses', title: 'Courses Offered', icon: GraduationCap, color: 'text-orange-600', bgColor: 'bg-orange-50', href: '#courses' },
     { id: 'tv', title: 'EMMAUS TV-JGF', icon: Tv, color: 'text-red-600', bgColor: 'bg-red-50', href: '#emmaus-tv' },
     { id: 'examination', title: 'Examination', icon: ClipboardCheck, color: 'text-purple-600', bgColor: 'bg-purple-50', href: '#examination' },
-    { id: 'results', title: 'Results', icon: Trophy, color: 'text-green-600', bgColor: 'bg-green-50', href: '#results' },
-    { id: 'gallery', title: 'Gallery', icon: Image, color: 'text-pink-600', bgColor: 'bg-pink-50', href: '#gallery' },
+    { id: 'results', title: 'Results', icon: Trophy, color: 'text-green-600', bgColor: 'bg-green-50', href: '/results', isPage: true },
+    { id: 'gallery', title: 'Gallery', icon: Image, color: 'text-pink-600', bgColor: 'bg-pink-50', href: '/gallery', isPage: true },
     { id: 'gospel-service', title: 'Application for Gospel Service', icon: Heart, color: 'text-red-600', bgColor: 'bg-red-50', href: '#gospel-service' },
     { id: 'gospel-need', title: 'Request for Gospel Programme', icon: HelpCircle, color: 'text-yellow-600', bgColor: 'bg-yellow-50', href: '#gospel-need' },
     { id: 'admission', title: 'Admission Registration', icon: UserPlus, color: 'text-indigo-600', bgColor: 'bg-indigo-50', href: '#admission' },
@@ -39,6 +42,22 @@ const Sidebar = ({ isOpen, onClose }) => {
 
   const handleItemClick = (item) => {
     setActiveSection(item.id);
+    
+    // If it's a page navigation (like results page)
+    if (item.isPage) {
+      navigate(item.href);
+      onClose();
+      return;
+    }
+    
+    // If we're on a standalone page, navigate to home first, then scroll to section
+    if (location.pathname !== '/') {
+      navigate(`/${item.href}`);
+      onClose();
+      return;
+    }
+    
+    // Otherwise, scroll to section on the main page
     const sectionId = item.href.replace('#', '');
     const el = document.getElementById(sectionId);
     const header = document.querySelector('header');

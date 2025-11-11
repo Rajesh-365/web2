@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Image, Calendar, ChevronDown, X, Layout } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 import { organizeGalleryItems } from '../utils/imageUtils';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 
 const GalleryPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState('landscape');
   const [selectedImage, setSelectedImage] = useState(null);
-  const [visibleItems, setVisibleItems] = useState(12);
+  const [visibleItems, setVisibleItems] = useState(20);
   const [galleryItems, setGalleryItems] = useState([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const itemsPerLoad = 12;
-
-  const categories = [
-    { id: 'landscape', label: 'Landscape Photos', icon: Layout },
-    { id: 'portrait', label: 'Portrait Photos', icon: Image },
-  ];
+  const itemsPerLoad = 20;
 
   useEffect(() => {
     const loadGalleryItems = async () => {
@@ -25,16 +19,11 @@ const GalleryPage = () => {
     loadGalleryItems();
   }, []);
 
-  const filteredItems = galleryItems.filter(item => item.orientation === selectedCategory);
-  const visibleGalleryItems = filteredItems.slice(0, visibleItems);
+  const visibleGalleryItems = galleryItems.slice(0, visibleItems);
 
   const loadMoreItems = () => {
-    setVisibleItems(prev => Math.min(prev + itemsPerLoad, filteredItems.length));
+    setVisibleItems(prev => Math.min(prev + itemsPerLoad, galleryItems.length));
   };
-
-  useEffect(() => {
-    setVisibleItems(12);
-  }, [selectedCategory]);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -42,30 +31,6 @@ const GalleryPage = () => {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="pt-[64px] md:pl-64">
-        {/* Category Buttons */}
-        <div className="bg-white dark:bg-gray-900 shadow-md">
-          <div className="container mx-auto px-4 py-3">
-            <div className="flex flex-wrap justify-center gap-4">
-              {categories.map((category) => {
-                const Icon = category.icon;
-                return (
-                  <button
-                    key={category.id}
-                    onClick={() => setSelectedCategory(category.id)}
-                    className={`px-8 py-3 rounded-xl font-medium transition-all duration-300 flex items-center gap-3 ${
-                      selectedCategory === category.id
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg scale-105'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 hover:scale-102'
-                    }`}
-                  >
-                    <Icon className="w-6 h-6" />
-                    {category.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </div>
 
         {/* Page Header */}
         <div className="bg-gradient-to-r from-blue-600 to-indigo-600">
@@ -77,69 +42,80 @@ const GalleryPage = () => {
           </div>
         </div>
 
+        {/* Gallery Categories */}
+        <div className="bg-white dark:bg-gray-800 shadow-lg">
+          <div className="container mx-auto px-4 py-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="text-center p-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-700/30">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-blue-100 dark:bg-blue-800/30 flex items-center justify-center">
+                  <span className="text-2xl">⛪</span>
+                </div>
+                <h3 className="text-lg font-bold text-blue-800 dark:text-blue-200 mb-1">Gospel Crusades</h3>
+                <p className="text-sm text-blue-600 dark:text-blue-300">Evangelistic events</p>
+              </div>
+              
+              <div className="text-center p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border border-green-200 dark:border-green-700/30">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-green-100 dark:bg-green-800/30 flex items-center justify-center">
+                  <span className="text-2xl">🎓</span>
+                </div>
+                <h3 className="text-lg font-bold text-green-800 dark:text-green-200 mb-1">Graduation Photos</h3>
+                <p className="text-sm text-green-600 dark:text-green-300">Ceremony moments</p>
+              </div>
+              
+              <div className="text-center p-4 rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20 border border-purple-200 dark:border-purple-700/30">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-purple-100 dark:bg-purple-800/30 flex items-center justify-center">
+                  <span className="text-2xl">🙏</span>
+                </div>
+                <h3 className="text-lg font-bold text-purple-800 dark:text-purple-200 mb-1">Prayer Meetings</h3>
+                <p className="text-sm text-purple-600 dark:text-purple-300">Spiritual gatherings</p>
+              </div>
+              
+              <div className="text-center p-4 rounded-xl bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border border-orange-200 dark:border-orange-700/30">
+                <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-orange-100 dark:bg-orange-800/30 flex items-center justify-center">
+                  <span className="text-2xl">👥</span>
+                </div>
+                <h3 className="text-lg font-bold text-orange-800 dark:text-orange-200 mb-1">Fellowship Events</h3>
+                <p className="text-sm text-orange-600 dark:text-orange-300">Community activities</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Main Content */}
         <main className="container mx-auto px-4 py-8">
           <div className="text-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-3">            </h2> 
           </div>
 
-          {/* Gallery Grid */}
-          <div
-            className={`grid gap-6 ${
-              selectedCategory === 'landscape'
-                ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
-                : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-            }`}
-          >
+          {/* Gallery Masonry Layout */}
+          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-8">
             {visibleGalleryItems.map((item) => (
-              <div
+              <figure
                 key={item.id}
-                className="group bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:-translate-y-1"
+                className="mb-8 break-inside-avoid relative group cursor-pointer transform transition-transform duration-300 hover:-translate-y-1"
+                onClick={() => setSelectedImage(item)}
               >
-                <div
-                  className="relative cursor-pointer"
-                  onClick={() => setSelectedImage(item)}
-                >
-                  <div
-                    className={`overflow-hidden ${
-                      item.orientation === 'landscape'
-                        ? 'aspect-w-16 aspect-h-9'
-                        : 'aspect-w-3 aspect-h-4'
-                    }`}
-                  >
-                    <img
-                      src={item.src}
-                      alt={item.title}
-                      className="w-full h-full object-cover transform transition-transform duration-500 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="bg-black/50 px-4 py-2 rounded-full text-white text-sm backdrop-blur-sm">
-                        Click to view
-                      </div>
-                    </div>
+                <img
+                  src={item.src}
+                  alt={item.title}
+                  loading="lazy"
+                  className="w-full h-auto rounded-2xl shadow-xl transition-all duration-300 group-hover:shadow-2xl group-hover:brightness-105"
+                />
+                <figcaption className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                  <div className="text-white text-sm font-semibold opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">
+                    <p className="font-bold">{item.title}</p>
+                    <p className="text-xs mt-1 opacity-80">{item.description}</p>
+                    <p className="text-xs mt-1 opacity-60">
+                      {new Date(item.date).toLocaleDateString()}
+                    </p>
                   </div>
-                </div>
-
-                <div className="p-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2 line-clamp-1">
-                    {item.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
-                    {item.description}
-                  </p>
-                  <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                    <Calendar className="w-4 h-4" />
-                    {new Date(item.date).toLocaleDateString()}
-                  </div>
-                </div>
-              </div>
+                </figcaption>
+              </figure>
             ))}
           </div>
 
           {/* Load More Button */}
-          {visibleItems < filteredItems.length && (
+          {visibleItems < galleryItems.length && (
             <div className="text-center mt-12">
               <button
                 onClick={loadMoreItems}

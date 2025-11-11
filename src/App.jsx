@@ -1,4 +1,5 @@
-import React, { Suspense, lazy, useState } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import LoadingSpinner from './components/LoadingSpinner';
 import { Menu } from 'lucide-react';
 
@@ -18,13 +19,15 @@ const RegionalCoordinators = lazy(() => import('./components/RegionalCoordinator
 const Courses = lazy(() => import('./components/Courses'));
 const EmmausTV = lazy(() => import('./components/EmmausTV'));
 const Examination = lazy(() => import('./components/Examination'));
-const Results = lazy(() => import('./components/Results'));
-const Gallery = lazy(() => import('./components/Gallery'));
 const GospelService = lazy(() => import('./components/GospelService'));
 const GospelNeed = lazy(() => import('./components/GospelNeed'));
 const AdmissionRegistration = lazy(() => import('./components/AdmissionRegistration'));
 const ResearchPapers = lazy(() => import('./components/ResearchPapers'));
 const Footer = lazy(() => import('./components/Footer'));
+
+// Standalone Pages
+const GalleryPage = lazy(() => import('./pages/GalleryPage'));
+const ResultsPage = lazy(() => import('./pages/ResultsPage'));
 
 // Simple error boundary
 class ErrorBoundary extends React.Component {
@@ -48,9 +51,33 @@ class ErrorBoundary extends React.Component {
   }
 }
 
-const App = () => {
+// Main content component with sidebar
+const MainLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
+  const location = useLocation();
+  
+  // Check if we're on a standalone page
+  const isStandalonePage = location.pathname === '/gallery' || location.pathname === '/results';
+
+  // Handle hash navigation when coming from standalone pages
+  useEffect(() => {
+    if (location.pathname === '/' && location.hash) {
+      const sectionId = location.hash.replace('#', '');
+      const el = document.getElementById(sectionId);
+      const header = document.querySelector('header');
+      const headerHeight = header ? header.getBoundingClientRect().height : 0;
+      const extraSpacing = 16;
+
+      if (el) {
+        // Small delay to ensure the page is fully rendered
+        setTimeout(() => {
+          const top = el.getBoundingClientRect().top + window.scrollY - headerHeight - extraSpacing;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }, 100);
+      }
+    }
+  }, [location]);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
@@ -71,35 +98,56 @@ const App = () => {
       <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
       {/* Add top padding to prevent overlap with fixed header */}
-      <div className="lg:pl-20 pt-[1px]">
+      <div className={[
+        'lg:pl-20',
+        isStandalonePage ? 'pt-32' : 'pt-[1px]'
+      ].join(' ')}>
         <main>
-          <Hero />
-
           <ErrorBoundary>
             <Suspense fallback={<LoadingSpinner />}>
-              <BrandingGrid />
-              <JohnGospelFellowship />
-              <Churches />
-              <GospelActivists />
-              <EIT />
-              <ExecutiveCouncil />
-              <RegionalCoordinators />
-              <Courses />
-              <EmmausTV />
-              <Examination />
-              <Results />
-              <Gallery />
-              <GospelService />
-              <GospelNeed />
-              <AdmissionRegistration />
-              <ResearchPapers />
-              
-              <Footer />
+              <Routes>
+                {/* Home page with all sections */}
+                <Route
+                  path="/"
+                  element={
+                    <>
+                      <Hero />
+                      <BrandingGrid />
+                      <JohnGospelFellowship />
+                      <Churches />
+                      <GospelActivists />
+                      <EIT />
+                      <ExecutiveCouncil />
+                      <RegionalCoordinators />
+                      <Courses />
+                      <EmmausTV />
+                      <Examination />
+                      <GospelService />
+                      <GospelNeed />
+                      <AdmissionRegistration />
+                      <ResearchPapers />
+                      <Footer />
+                    </>
+                  }
+                />
+
+                {/* Standalone pages */}
+                <Route path="/gallery" element={<GalleryPage />} />
+                <Route path="/results" element={<ResultsPage />} />
+              </Routes>
             </Suspense>
           </ErrorBoundary>
         </main>
       </div>
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <BrowserRouter>
+      <MainLayout />
+    </BrowserRouter>
   );
 };
 

@@ -41,16 +41,18 @@ const Churches = () => {
             </p>
           </div>
 
-          {/* Churches Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {churches.map((church, index) => (
-              <ChurchCard
-                key={index}
-                church={church}
-                delay={index * 150}
-                onImageClick={() => setSelectedImage({ src: church.image, alt: church.name })}
-              />
-            ))}
+          {/* Churches Grid - Horizontal scroll on mobile, grid on desktop */}
+          <div className="overflow-x-auto pb-4 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="flex gap-8 sm:grid sm:grid-cols-2 lg:grid-cols-3 min-w-max sm:min-w-0">
+              {churches.map((church, index) => (
+                <ChurchCard
+                  key={index}
+                  church={church}
+                  delay={index * 150}
+                  onImageClick={() => setSelectedImage({ src: church.image, alt: church.name })}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -70,14 +72,11 @@ const Churches = () => {
 const ChurchCard = ({ church, delay, onImageClick }) => {
   return (
     <div
-      className={`group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 animate-fade-in-up ${
+      className={`w-80 sm:w-auto flex-shrink-0 sm:flex-shrink group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden transform hover:-translate-y-2 animate-fade-in-up ${
         church.status === 'construction' ? 'border-2 border-dashed border-orange-300 dark:border-orange-400' : ''
       } dark:bg-gray-700`}
       style={{
         animationDelay: `${delay}ms`,
-        minWidth: '300px',
-        maxWidth: '100%',
-        height: 'auto',
       }}
     >
       {church.status === 'construction' && (
